@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 """
-    Resolver
+    Proofchecker
     ~~~~~
 
     copyright: (c) 2014 by Halfmoon Labs, Inc.
     copyright: (c) 2015 by Blockstack.org
 
-This file is part of Resolver.
+This file is part of Proofchecker.
 
     Resolver is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@ This file is part of Resolver.
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with Resolver. If not, see <http://www.gnu.org/licenses/>.
+    along with Proofchecker. If not, see <http://www.gnu.org/licenses/>.
 """
 
 from bs4 import BeautifulSoup
