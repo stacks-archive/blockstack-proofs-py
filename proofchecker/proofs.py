@@ -30,7 +30,7 @@ from time import time
 
 from .htmlparsing import get_search_text, get_github_text, get_twitter_url
 from .sites import SITES
-from ..config import MEMCACHED_PORT, MEMCACHED_TIMEOUT, DEFAULT_HOST, MEMCACHED_ENABLED
+from .config import MEMCACHED_PORT, MEMCACHED_TIMEOUT, DEFAULT_HOST, MEMCACHED_ENABLED
 
 mc = pylibmc.Client([DEFAULT_HOST + ':' + str(MEMCACHED_PORT)], binary=True)
 
