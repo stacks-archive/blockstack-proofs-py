@@ -26,7 +26,7 @@ import socket
 import dns.resolver
 
 DNS_SERVERS = ['8.8.8.8', '8.8.4.4']  # use a Google DNS servers as default
-TXT_RECORD_PREFIX = 'blockchainid.proof.'
+TXT_RECORD_PREFIX = 'blockchainid.'
 ADDITIONAL_RDCLASS = 65535
 
 
@@ -55,7 +55,7 @@ def parse_txt_from_data(data):
     data = data.split('\n')
 
     for entry in data:
-        if "blockchainid.proof" in entry:
+        if "blockchainid" in entry:
 
             data = entry.split('TXT')
 
