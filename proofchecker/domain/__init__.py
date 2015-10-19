@@ -22,5 +22,4 @@ This file is part of Proofchecker.
     along with Proofchecker. If not, see <http://www.gnu.org/licenses/>.
 """
 
-from proofs import profile_to_proofs
-from proofs import contains_valid_proof_statement
+from domain import get_proof_from_txt_record

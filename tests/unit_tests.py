@@ -34,8 +34,12 @@ parent_dir = os.path.abspath(current_dir + "/../")
 sys.path.insert(0, parent_dir)
 
 from proofchecker import profile_to_proofs
+from proofchecker import contains_valid_proof_statement
+from proofchecker.domain import get_proof_from_txt_record
 
 test_users = ['muneeb', 'fredwilson']
+
+test_domains = [{"username": "muneeb", 'domain': 'muneebali.com'}]
 
 BASE_URL = 'http://resolver-btc.onename.com/v2/users/'
 
@@ -66,6 +70,20 @@ class ProofcheckerTestCase(unittest.TestCase):
 
                 if proof['service'] == 'twitter':
                     self.assertTrue(proof['valid'])
+
+    def test_domain_proof(self):
+        """ Check domain proof
+        """
+
+        for test_domain in test_domains:
+            username = test_domain['username']
+            domain = test_domain['domain']
+
+            proof_txt = get_proof_from_txt_record(domain)
+
+            validProof = contains_valid_proof_statement(proof_txt, username)
+
+            self.assertTrue(validProof)
 
 if __name__ == '__main__':
 
