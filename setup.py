@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='proofchecker',
-    version='0.0.1',
+    version='0.0.2',
     url='https://github.com/blockstack/proofchecker',
     license='GPLv3',
     author='Blockstack.org',
@@ -17,7 +17,8 @@ setup(
     install_requires=[
         'beautifulsoup4>=4.4.1',
         'pylibmc>=1.5.0',
-        'requests>=2.8.1'
+        'requests>=2.8.1',
+        'dnspython>=1.12.0'
     ],
     classifiers=[
         'Intended Audience :: Developers',
