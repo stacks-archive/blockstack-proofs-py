@@ -1,38 +1,20 @@
 # -*- coding: utf-8 -*-
 """
-    Proofchecker
+    proofchecker
     ~~~~~
-
-    copyright: (c) 2014 by Halfmoon Labs, Inc.
-    copyright: (c) 2015 by Blockstack.org
-
-This file is part of Proofchecker.
-
-    Proofchecker is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    Proofchecker is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with Proofchecker. If not, see <http://www.gnu.org/licenses/>.
+    :copyright: (c) 2014-2016 by Halfmoon Labs, Inc.
+    :copyright: (c) 2016 blockstack.org
+    :license: MIT, see LICENSE for more details.
 """
 
 import requests
 import json
 import hashlib
-import pylibmc
+
 from time import time
 
 from .htmlparsing import get_search_text, get_github_text, get_twitter_url
 from .sites import SITES
-from .config import MEMCACHED_PORT, MEMCACHED_TIMEOUT, DEFAULT_HOST, MEMCACHED_ENABLED
-
-mc = pylibmc.Client([DEFAULT_HOST + ':' + str(MEMCACHED_PORT)], binary=True)
 
 
 def contains_valid_proof_statement(search_text, username):
@@ -66,7 +48,7 @@ def is_valid_proof(site, site_username, username, proof_url):
     proof_url = proof_url.lower()
     username = username.lower()
 
-    if not site in SITES and 'base_url' in SITES[site]:
+    if site not in SITES and 'base_url' in SITES[site]:
         return False
 
     check_url = SITES[site]['base_url'] + site_username
@@ -78,7 +60,7 @@ def is_valid_proof(site, site_username, username, proof_url):
             if not proof_url.startswith(check_url):
                 return False
         else:
-            return False    
+            return False
 
     try:
         r = requests.get(proof_url)
@@ -150,11 +132,6 @@ def site_data_to_identifier(site_data):
 
 def profile_to_proofs(profile, username, refresh=False):
 
-    global MEMCACHED_ENABLED
-
-    if refresh:
-        MEMCACHED_ENABLED = False
-
     proofs = []
 
     try:
@@ -177,24 +154,8 @@ def profile_to_proofs(profile, username, refresh=False):
 
                     proof_url_hash = hashlib.md5(proof_url).hexdigest()
 
-                    if MEMCACHED_ENABLED:
-                        cache_reply = mc.get("proof_" + proof_url_hash)
-                    else:
-                        cache_reply = None
-                        #log.debug("cache off")
-
-                    if cache_reply is None:
-
-                        if is_valid_proof(proof_site, identifier, username, proof_url):
-                            proof["valid"] = True
-
-                            if MEMCACHED_ENABLED:
-                                mc.set("proof_" + proof_url_hash, username, int(time() + MEMCACHED_TIMEOUT))
-                                #log.debug("cache miss")
-                    else:
-                        #log.debug("cache hit")
-                        if cache_reply == username:
-                            proof["valid"] = True
+                    if is_valid_proof(proof_site, identifier, username, proof_url):
+                        proof["valid"] = True
 
                     proofs.append(proof)
     return proofs
