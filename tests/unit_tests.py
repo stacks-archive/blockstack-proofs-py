@@ -1,26 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-    Proofchecker
+    proofchecker
     ~~~~~
-
-    copyright: (c) 2014 by Halfmoon Labs, Inc.
-    copyright: (c) 2015 by Blockstack.org
-
-This file is part of Proofchecker.
-
-    Proofchecker is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    Proofchecker is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with Proofchecker. If not, see <http://www.gnu.org/licenses/>.
+    :copyright: (c) 2014-2015 by Halfmoon Labs, Inc.
+    :copyright: (c) 2016 blockstack.org
+    :license: MIT, see LICENSE for more details.
 """
 
 import os
@@ -35,18 +20,18 @@ sys.path.insert(0, parent_dir)
 
 from proofchecker import profile_to_proofs
 from proofchecker import contains_valid_proof_statement
-from proofchecker.domain import get_proof_from_txt_record
+from proofchecker import get_proof_from_txt_record
 
 test_users = ['muneeb', 'fredwilson']
 
 test_domains = [{"username": "muneeb", 'domain': 'muneebali.com'}]
 
-BASE_URL = 'http://resolver-btc.onename.com/v2/users/'
+BASE_URL = 'https://resolver.onename.com/v2/users/'
 
 
 def get_profile(username):
 
-    resp = requests.get(BASE_URL + username, timeout=10, verify=False)
+    resp = requests.get(BASE_URL + username, timeout=10)
 
     data = resp.json()
 
