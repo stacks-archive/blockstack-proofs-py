@@ -22,9 +22,11 @@ from proofchecker import profile_to_proofs
 from proofchecker import contains_valid_proof_statement
 from proofchecker import get_proof_from_txt_record
 
-test_users = ['muneeb', 'fredwilson']
+test_users = ['ryan', 'werner']
 
 test_domains = [{"username": "muneeb", 'domain': 'muneebali.com'}]
+
+check_proofs = ['twitter', 'facebook', 'github']
 
 BASE_URL = 'https://resolver.onename.com/v2/users/'
 
@@ -43,7 +45,7 @@ class ProofcheckerTestCase(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def test_twitter_proof(self):
+    def test_proofs(self):
         """ Check twitter proof
         """
 
@@ -53,7 +55,7 @@ class ProofcheckerTestCase(unittest.TestCase):
 
             for proof in proofs:
 
-                if proof['service'] == 'twitter':
+                if proof['service'] in check_proofs:
                     self.assertTrue(proof['valid'])
 
     def test_domain_proof(self):
