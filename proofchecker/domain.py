@@ -1,42 +1,28 @@
 # -*- coding: utf-8 -*-
 """
-    Proofchecker
+    proofchecker
     ~~~~~
-
-    copyright: (c) 2014 by Halfmoon Labs, Inc.
-    copyright: (c) 2015 by Blockstack.org
-
-This file is part of Proofchecker.
-
-    Proofchecker is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    Proofchecker is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with Proofchecker. If not, see <http://www.gnu.org/licenses/>.
+    :copyright: (c) 2014-2016 by Halfmoon Labs, Inc.
+    :copyright: (c) 2016 blockstack.org
+    :license: MIT, see LICENSE for more details.
 """
+
 
 import socket
 import dns.resolver
 
-DNS_SERVERS = ['8.8.8.8', '8.8.4.4']  # use a Google DNS servers as default
-TXT_RECORD_PREFIX = 'blockchainid.'
-ADDITIONAL_RDCLASS = 65535
+import dns.name
+import dns.message
+import dns.query
+import dns.flags
+
+from .config import DNS_SERVERS, TXT_RECORD_PREFIX, ADDITIONAL_RDCLASS
 
 
 def dns_resolver(domain):
-    import dns.name
-    import dns.message
-    import dns.query
-    import dns.flags
 
     domain = dns.name.from_text(domain)
+
     if not domain.is_absolute():
         domain = domain.concatenate(dns.name.root)
 
@@ -46,10 +32,12 @@ def dns_resolver(domain):
                        dns.rdatatype.OPT, create=True, force_unique=True)
 
     data = dns.query.udp(request, DNS_SERVERS[0])
+
     return data.to_text()
 
 
 def parse_txt_from_data(data):
+
     proof_txt = None
 
     data = data.split('\n')
