@@ -1,9 +1,9 @@
 # Blockstack Proof Checker
 
-[![CircleCI](https://img.shields.io/circleci/project/blockstack/blockstack-proofchecker.svg)](https://circleci.com/gh/blockstack/blockstack-proofchecker)
-[![PyPI](https://img.shields.io/pypi/v/blockstack-proofchecker.svg)](https://pypi.python.org/pypi/blockstack-proofchecker/)
-[![PyPI](https://img.shields.io/pypi/dm/blockstack-proofchecker.svg)](https://pypi.python.org/pypi/blockstack-proofchecker/)
-[![PyPI](https://img.shields.io/pypi/l/blockstack-proofchecker.svg)](https://pypi.python.org/pypi/blockstack-proofchecker/)
+[![CircleCI](https://img.shields.io/circleci/project/blockstack/blockstack-proofchecker.svg)](https://circleci.com/gh/blockstack/blockstack-proofs)
+[![PyPI](https://img.shields.io/pypi/v/blockstack-proofchecker.svg)](https://pypi.python.org/pypi/blockstack-proofs)
+[![PyPI](https://img.shields.io/pypi/dm/blockstack-proofchecker.svg)](https://pypi.python.org/pypi/blockstack-proofs)
+[![PyPI](https://img.shields.io/pypi/l/blockstack-proofchecker.svg)](https://pypi.python.org/pypi/blockstack-proofs)
 [![Slack](http://slack.blockstack.org/badge.svg)](http://slack.blockstack.org/)
 
 A python library for verifying identity proofs in blockstack profiles / blockchain IDs.
@@ -18,7 +18,7 @@ Proof types supported:
 ### Installation
 
 ```bash
-$ pip install blockstack-proofchecker
+$ pip install blockstack-proofs
 ```
 
 ### Getting Proofs from a Profile
