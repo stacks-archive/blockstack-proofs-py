@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='blockstack-proofs',
-    version='0.0.3',
+    version='0.0.4',
     url='https://github.com/blockstack/blockstack-proofs',
     license='MIT',
     author='Blockstack.org',

@@ -18,9 +18,9 @@ current_dir = os.path.abspath(os.path.dirname(__file__))
 parent_dir = os.path.abspath(current_dir + "/../")
 sys.path.insert(0, parent_dir)
 
-from proofchecker import profile_to_proofs
-from proofchecker import contains_valid_proof_statement
-from proofchecker import get_proof_from_txt_record
+from blockstack_proofs import profile_to_proofs, profile_v3_to_proofs
+from blockstack_proofs import contains_valid_proof_statement
+from blockstack_proofs import get_proof_from_txt_record
 
 test_users = ['ryan', 'werner']
 
@@ -37,7 +37,10 @@ def get_profile(username):
 
     data = resp.json()
 
-    return data[username]['profile']
+    if 'zone_file' in data[username]:
+        return data[username]['profile'], data[username]['zone_file']
+    else:
+        return data[username]['profile'], None
 
 
 class ProofcheckerTestCase(unittest.TestCase):
@@ -50,8 +53,12 @@ class ProofcheckerTestCase(unittest.TestCase):
         """
 
         for username in test_users:
-            profile = get_profile(username)
-            proofs = profile_to_proofs(profile, username)
+            profile, zone_file = get_profile(username)
+
+            if zone_file is not None:
+                proofs = profile_v3_to_proofs(profile, username)
+            else:
+                proofs = profile_to_proofs(profile, username)
 
             for proof in proofs:
 
