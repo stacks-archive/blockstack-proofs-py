@@ -26,7 +26,7 @@ $ pip install blockstack-proofs
 To get the proofs for a blockchain ID, pass in the profile and username for the ID as shown below.
 
 ```python
->>> from proofchecker import profile_to_proofs
+>>> from blockstack_proofs import profile_to_proofs
 >>> proofs = profile_to_proofs(profile, username)
 >>> print proofs
 [{'identifier': 'naval', 'proof_url': 'https://twitter.com/naval/status/486609266212499456', 'service': 'twitter', 'valid': True}, {'identifier': 'navalr', 'proof_url': 'https://facebook.com/navalr/posts/10152190734077261', 'service': 'facebook', 'valid': True}, {'identifier': 'navalr', 'proof_url': 'https://gist.github.com/navalr/f31a74054f859ec0ac6a', 'service': 'github', 'valid': True}]

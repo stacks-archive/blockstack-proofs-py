@@ -18,9 +18,9 @@ current_dir = os.path.abspath(os.path.dirname(__file__))
 parent_dir = os.path.abspath(current_dir + "/../")
 sys.path.insert(0, parent_dir)
 
-from proofchecker import profile_to_proofs, profile_v3_to_proofs
-from proofchecker import contains_valid_proof_statement
-from proofchecker import get_proof_from_txt_record
+from blockstack_proofs import profile_to_proofs, profile_v3_to_proofs
+from blockstack_proofs import contains_valid_proof_statement
+from blockstack_proofs import get_proof_from_txt_record
 
 test_users = ['ryan', 'werner']
 
