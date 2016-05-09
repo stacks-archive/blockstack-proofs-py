@@ -152,10 +152,51 @@ def profile_to_proofs(profile, username, refresh=False):
                         "valid": False
                     }
 
-                    proof_url_hash = hashlib.md5(proof_url).hexdigest()
-
                     if is_valid_proof(proof_site, identifier, username, proof_url):
                         proof["valid"] = True
 
                     proofs.append(proof)
+    return proofs
+
+
+def profile_v3_to_proofs(profile, username, refresh=False):
+    """
+        Convert profile format v3 to proofs
+    """
+
+    proofs = []
+
+    try:
+        test = profile.items()
+    except:
+        return proofs
+
+    if 'accounts' in profile:
+        accounts = profile['account']
+    else:
+        return proofs
+
+    for account in accounts:
+
+        # skip if proof service is not supported
+        if 'service' in account and account['service'] not in SITES:
+            continue
+
+        if 'proofType' in account and account['proofType'] == "http":
+
+            try:
+                proof = {"service": account['service'],
+                         "proof_url": account['proofUrl'],
+                         "identifier": account['identifier'],
+                         "valid": False}
+
+                if is_valid_proof(account['service'], account['identifier'],
+                                  username, account['proofUrl']):
+
+                    proof["valid"] = True
+
+                proofs.append(proof)
+            except Exception as e:
+                pass
+
     return proofs
