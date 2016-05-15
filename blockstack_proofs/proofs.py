@@ -171,7 +171,7 @@ def profile_v3_to_proofs(profile, username, refresh=False):
     except:
         return proofs
 
-    if 'accounts' in profile:
+    if 'account' in profile:
         accounts = profile['account']
     else:
         return proofs

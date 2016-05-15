@@ -22,7 +22,7 @@ from blockstack_proofs import profile_to_proofs, profile_v3_to_proofs
 from blockstack_proofs import contains_valid_proof_statement
 from blockstack_proofs import get_proof_from_txt_record
 
-test_users = ['ryan', 'werner']
+test_users = ['ryan', 'werner', 'vintage_fashion_bazaar']
 
 test_domains = [{"username": "muneeb", 'domain': 'muneebali.com'}]
 
