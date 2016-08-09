@@ -29,7 +29,9 @@ def contains_valid_proof_statement(search_text, username):
         "verifying that %s is my openname" % username,
         "verifying that +%s is my openname" % username,
         "verifying i am +%s on my passcard" % username,
-        "verifying that +%s is my blockchain id" % username
+        "verifying that +%s is my blockchain id" % username,
+        "verifying that \"%s.id\" is my blockstack id" % username,
+        "verifying that %s.id is my blockstack id" % username     
     ]
 
     for verification_style in verification_styles:
@@ -171,7 +173,7 @@ def profile_v3_to_proofs(profile, username, refresh=False):
     except:
         return proofs
 
-    if 'accounts' in profile:
+    if 'account' in profile:
         accounts = profile['account']
     else:
         return proofs
