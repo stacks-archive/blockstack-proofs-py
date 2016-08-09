@@ -22,7 +22,7 @@ from blockstack_proofs import profile_to_proofs, profile_v3_to_proofs
 from blockstack_proofs import contains_valid_proof_statement
 from blockstack_proofs import get_proof_from_txt_record
 
-test_users = ['ryan', 'werner', 'vintage_fashion_bazaar']
+test_users = ['ryan', 'werner', 'muneeb']
 
 test_domains = [{"username": "muneeb", 'domain': 'muneebali.com'}]
 
@@ -55,7 +55,7 @@ class ProofcheckerTestCase(unittest.TestCase):
         for username in test_users:
             profile, zone_file = get_profile(username)
 
-            if zone_file is not None:
+            if zone_file is not None and zone_file != {}:
                 proofs = profile_v3_to_proofs(profile, username)
             else:
                 proofs = profile_to_proofs(profile, username)
