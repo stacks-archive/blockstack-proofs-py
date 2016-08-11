@@ -10,6 +10,7 @@
 
 import os
 import sys
+import json
 import unittest
 import requests
 
@@ -22,7 +23,7 @@ from blockstack_proofs import profile_to_proofs, profile_v3_to_proofs
 from blockstack_proofs import contains_valid_proof_statement
 from blockstack_proofs import get_proof_from_txt_record
 
-test_users = ['ryan', 'werner', 'muneeb']
+test_users = ['ryan', 'werner', 'muneeb', 'fredwilson']
 
 test_domains = [{"username": "muneeb", 'domain': 'muneebali.com'}]
 
@@ -43,6 +44,42 @@ def get_profile(username):
         return data[username]['profile'], None
 
 
+def is_profile_in_legacy_format(profile):
+    """
+    Is a given profile JSON object in legacy format?
+    """
+    if isinstance(profile, dict):
+        pass
+    elif isinstance(profile, (str, unicode)):
+        try:
+            profile = json.loads(profile)
+        except ValueError:
+            return False
+    else:
+        return False
+
+    if "@type" in profile:
+        return False
+
+    if "@context" in profile:
+        return False
+
+    is_in_legacy_format = False
+
+    if "avatar" in profile:
+        is_in_legacy_format = True
+    elif "cover" in profile:
+        is_in_legacy_format = True
+    elif "bio" in profile:
+        is_in_legacy_format = True
+    elif "twitter" in profile:
+        is_in_legacy_format = True
+    elif "facebook" in profile:
+        is_in_legacy_format = True
+
+    return is_in_legacy_format
+
+
 class ProofcheckerTestCase(unittest.TestCase):
 
     def tearDown(self):
@@ -55,7 +92,7 @@ class ProofcheckerTestCase(unittest.TestCase):
         for username in test_users:
             profile, zone_file = get_profile(username)
 
-            if zone_file is not None and zone_file != {}:
+            if not is_profile_in_legacy_format(zone_file):
                 proofs = profile_v3_to_proofs(profile, username)
             else:
                 proofs = profile_to_proofs(profile, username)
