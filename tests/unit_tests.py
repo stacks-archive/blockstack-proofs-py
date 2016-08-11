@@ -35,13 +35,15 @@ BASE_URL = 'https://resolver.onename.com/v2/users/'
 def get_profile(username):
 
     resp = requests.get(BASE_URL + username, timeout=10)
-
+    #resp = requests.get(BASE_URL + username + ".json", timeout=10)
     data = resp.json()
 
-    if 'zone_file' in data[username]:
-        return data[username]['profile'], data[username]['zone_file']
+    data = data[username]
+
+    if 'zone_file' in data:
+        return data['profile'], data['zone_file']
     else:
-        return data[username]['profile'], None
+        return data['profile'], None
 
 
 def is_profile_in_legacy_format(profile):
@@ -98,7 +100,7 @@ class ProofcheckerTestCase(unittest.TestCase):
                 proofs = profile_to_proofs(profile, username)
 
             for proof in proofs:
-
+                print proof
                 if proof['service'] in check_proofs:
                     self.assertTrue(proof['valid'])
 
