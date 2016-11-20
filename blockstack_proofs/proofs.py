@@ -45,7 +45,6 @@ def contains_valid_proof_statement(search_text, username):
 
 
 def is_valid_proof(site, site_username, username, proof_url):
-
     site_username = site_username.lower()
     proof_url = proof_url.lower()
     username = username.lower()
@@ -58,8 +57,9 @@ def is_valid_proof(site, site_username, username, proof_url):
     if not proof_url.startswith(check_url):
 
         if site == 'facebook':
-            check_url = SITES['facebook-www']['base_url'] + site_username
-            if not proof_url.startswith(check_url):
+            check_url_dot = SITES['facebook-www']['base_url'] + site_username;
+            check_url = SITES['facebook-www']['base_url'] + site_username.strip(['.']);
+            if not proof_url.startswith(check_url_dot) and proof_url.startsWith(check_url):
                 return False
         else:
             return False
