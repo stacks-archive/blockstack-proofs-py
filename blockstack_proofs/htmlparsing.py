@@ -11,28 +11,27 @@
 from bs4 import BeautifulSoup
 from .sites import SITES
 
-GITHUB_CONTENT_TAG = 'blob instapaper_body'
-GITHUB_DESCRIPTION_TAG = 'repository-description'
-GITHUB_FILE_TAG = 'blob-wrapper data type-text'
-
+GITHUB_CONTENT_TAG = 'blob-wrapper'
+GITHUB_DESCRIPTION_TAG = 'repository-meta-content'
+GITHUB_FILE_TAG = 'user-select-contain gist-blob-name css-truncate-target'
 
 def get_github_text(raw_html):
 
     html = BeautifulSoup(raw_html, "html.parser")
 
-    gist_description = html.body.find('div', attrs={'class': GITHUB_CONTENT_TAG})
+    gist_description = html.find('div', {'class': GITHUB_CONTENT_TAG})
 
     if gist_description is not None:
         gist_description = gist_description.text
     else:
-        gist_description = html.body.find('div', attrs={'class': GITHUB_DESCRIPTION_TAG})
+        gist_description = html.find('div', {'class': GITHUB_DESCRIPTION_TAG})
 
         if gist_description is not None:
             gist_description = gist_description.text
         else:
             gist_description = ''
 
-    file_text = html.body.find('div', attrs={'class': GITHUB_FILE_TAG})
+    file_text = html.find('div', {'class': GITHUB_FILE_TAG})
 
     if file_text is not None:
         file_text = file_text.text
