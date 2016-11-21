@@ -57,9 +57,11 @@ def is_valid_proof(site, site_username, username, proof_url):
     if not proof_url.startswith(check_url):
 
         if site == 'facebook':
-            check_url_dot = SITES['facebook-www']['base_url'] + site_username;
-            check_url = SITES['facebook-www']['base_url'] + site_username.strip(['.']);
-            if not proof_url.startswith(check_url_dot) and proof_url.startsWith(check_url):
+
+            # remove any "." from usernames before checking URL match
+            check_url = SITES['facebook-www']['base_url'] + site_username.replace('.', '')
+
+            if not proof_url.startswith(check_url):
                 return False
         else:
             return False
@@ -199,6 +201,7 @@ def profile_v3_to_proofs(profile, username, refresh=False):
 
                 proofs.append(proof)
             except Exception as e:
+                print e
                 pass
 
     return proofs
