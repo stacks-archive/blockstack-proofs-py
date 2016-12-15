@@ -95,9 +95,9 @@ class ProofcheckerTestCase(unittest.TestCase):
             profile, zone_file = get_profile(username)
 
             if not is_profile_in_legacy_format(zone_file):
-                proofs = profile_v3_to_proofs(profile, username)
+                proofs = profile_v3_to_proofs(profile, username + '.id')
             else:
-                proofs = profile_to_proofs(profile, username)
+                proofs = profile_to_proofs(profile, username + '.id')
 
             for proof in proofs:
                 print proof
@@ -114,7 +114,7 @@ class ProofcheckerTestCase(unittest.TestCase):
 
             proof_txt = get_proof_from_txt_record(domain)
 
-            validProof = contains_valid_proof_statement(proof_txt, username)
+            validProof = contains_valid_proof_statement(proof_txt, username + ".id")
 
             self.assertTrue(validProof)
 
