@@ -17,8 +17,16 @@ from .htmlparsing import get_search_text, get_github_text, get_twitter_url
 from .sites import SITES
 
 
-def contains_valid_proof_statement(search_text, username):
+def contains_valid_proof_statement(search_text, fqdn):
     search_text = search_text.lower()
+
+    if len(fqdn.split('.')) != 2:
+      raise Exception("Please provide the fully qualified Blockstack name.")
+
+      username = None
+
+    if fqdn.endswith('.id'): #support legacy Blockstack ID proofs
+      username = fqdn.split('.id')[0]
 
     verification_styles = [
         "verifying myself: my bitcoin username is +%s" % username,
@@ -30,9 +38,12 @@ def contains_valid_proof_statement(search_text, username):
         "verifying that +%s is my openname" % username,
         "verifying i am +%s on my passcard" % username,
         "verifying that +%s is my blockchain id" % username,
-        "verifying that \"%s.id\" is my blockstack id" % username,
-        "verifying that %s.id is my blockstack id" % username     
-    ]
+        "verifying that \"%s\" is my blockstack id" % fqdn,
+        "verifying that %s is my blockstack id" % fqdn
+        ] if username is not None else [ # only these formats are valid for non-.id tlds
+        "verifying that \"%s\" is my blockstack id"  % fqdn,
+        "verifying that %s is my blockstack id" % fqdn,
+        ]
 
     for verification_style in verification_styles:
         if verification_style in search_text:
@@ -44,10 +55,10 @@ def contains_valid_proof_statement(search_text, username):
     return False
 
 
-def is_valid_proof(site, site_username, username, proof_url):
+def is_valid_proof(site, site_username, fqdn, proof_url):
     site_username = site_username.lower()
     proof_url = proof_url.lower()
-    username = username.lower()
+    fqdn = fqdn.lower()
 
     if site not in SITES and 'base_url' in SITES[site]:
         return False
@@ -57,9 +68,11 @@ def is_valid_proof(site, site_username, username, proof_url):
     if not proof_url.startswith(check_url):
 
         if site == 'facebook':
-            check_url_dot = SITES['facebook-www']['base_url'] + site_username;
-            check_url = SITES['facebook-www']['base_url'] + site_username.strip(['.']);
-            if not proof_url.startswith(check_url_dot) and proof_url.startsWith(check_url):
+
+            # remove any "." from usernames before checking URL match
+            check_url = SITES['facebook-www']['base_url'] + site_username.replace('.', '')
+
+            if not proof_url.startswith(check_url):
                 return False
         else:
             return False
@@ -93,7 +106,7 @@ def is_valid_proof(site, site_username, username, proof_url):
     else:
         search_text = ''
 
-    return contains_valid_proof_statement(search_text, username)
+    return contains_valid_proof_statement(search_text, fqdn)
 
 
 def site_data_to_proof_url(site_data, identifier):
@@ -132,7 +145,7 @@ def site_data_to_identifier(site_data):
     return identifier
 
 
-def profile_to_proofs(profile, username, refresh=False):
+def profile_to_proofs(profile, fqdn, refresh=False):
 
     proofs = []
 
@@ -154,14 +167,14 @@ def profile_to_proofs(profile, username, refresh=False):
                         "valid": False
                     }
 
-                    if is_valid_proof(proof_site, identifier, username, proof_url):
+                    if is_valid_proof(proof_site, identifier, fqdn, proof_url):
                         proof["valid"] = True
 
                     proofs.append(proof)
     return proofs
 
 
-def profile_v3_to_proofs(profile, username, refresh=False):
+def profile_v3_to_proofs(profile, fqdn, refresh=False):
     """
         Convert profile format v3 to proofs
     """
@@ -193,12 +206,13 @@ def profile_v3_to_proofs(profile, username, refresh=False):
                          "valid": False}
 
                 if is_valid_proof(account['service'], account['identifier'],
-                                  username, account['proofUrl']):
+                                  fqdn, account['proofUrl']):
 
                     proof["valid"] = True
 
                 proofs.append(proof)
             except Exception as e:
+                print e
                 pass
 
     return proofs
