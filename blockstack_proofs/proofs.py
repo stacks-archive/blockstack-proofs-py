@@ -58,8 +58,7 @@ def is_valid_proof(site, site_username, username, proof_url):
 
         if site == 'facebook':
 
-            # remove any "." from usernames before checking URL match
-            check_url = SITES['facebook-www']['base_url'] + site_username.replace('.', '')
+            check_url = SITES['facebook-www']['base_url']
 
             if not proof_url.startswith(check_url):
                 return False
