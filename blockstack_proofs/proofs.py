@@ -17,9 +17,7 @@ from .htmlparsing import get_search_text, get_github_text, get_twitter_url
 from .sites import SITES
 
 
-def contains_valid_proof_statement(search_text, fqdn):
-    search_text = search_text.lower()
-
+def contains_valid_proof_statement(search_text, fqdn, address = None):
     if len(fqdn.split('.')) != 2:
       raise Exception("Please provide the fully qualified Blockstack name.")
 
@@ -45,17 +43,26 @@ def contains_valid_proof_statement(search_text, fqdn):
         "verifying that %s is my blockstack id" % fqdn,
         ]
 
+    search_text_lower = search_text.lower()
+    if address is not None and address in search_text:
+        # case sensitivite address, but otherwise, case insensitive.
+        search_text_lower = address.join(
+            [piece.lower() for piece in search_text.split(address)])
+        verification_styles += [
+            "verifying my blockstack id is secured with the address %s" % address
+        ]
+
     for verification_style in verification_styles:
-        if verification_style in search_text:
+        if verification_style in search_text_lower:
             return True
 
-    if "verifymyonename" in search_text and ("+" + username) in search_text:
+    if "verifymyonename" in search_text_lower and ("+" + username) in search_text_lower:
         return True
 
     return False
 
 
-def is_valid_proof(site, site_username, fqdn, proof_url):
+def is_valid_proof(site, site_username, fqdn, proof_url, address = None):
     site_username = site_username.lower()
     proof_url = proof_url.lower()
     fqdn = fqdn.lower()
@@ -105,7 +112,7 @@ def is_valid_proof(site, site_username, fqdn, proof_url):
     else:
         search_text = ''
 
-    return contains_valid_proof_statement(search_text, fqdn)
+    return contains_valid_proof_statement(search_text, fqdn, address = address)
 
 
 def site_data_to_proof_url(site_data, identifier):
@@ -144,7 +151,7 @@ def site_data_to_identifier(site_data):
     return identifier
 
 
-def profile_to_proofs(profile, fqdn, refresh=False):
+def profile_to_proofs(profile, fqdn, refresh=False, address = None):
 
     proofs = []
 
@@ -166,14 +173,14 @@ def profile_to_proofs(profile, fqdn, refresh=False):
                         "valid": False
                     }
 
-                    if is_valid_proof(proof_site, identifier, fqdn, proof_url):
+                    if is_valid_proof(proof_site, identifier, fqdn, proof_url, address = address):
                         proof["valid"] = True
 
                     proofs.append(proof)
     return proofs
 
 
-def profile_v3_to_proofs(profile, fqdn, refresh=False):
+def profile_v3_to_proofs(profile, fqdn, refresh=False, address = None):
     """
         Convert profile format v3 to proofs
     """
@@ -205,13 +212,12 @@ def profile_v3_to_proofs(profile, fqdn, refresh=False):
                          "valid": False}
 
                 if is_valid_proof(account['service'], account['identifier'],
-                                  fqdn, account['proofUrl']):
+                                  fqdn, account['proofUrl'], address = address):
 
                     proof["valid"] = True
 
                 proofs.append(proof)
             except Exception as e:
-                print e
                 pass
 
     return proofs
