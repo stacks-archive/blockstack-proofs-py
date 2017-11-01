@@ -67,6 +67,8 @@ def is_valid_proof(site, site_username, fqdn, proof_url, address = None):
     proof_url = proof_url.lower()
     fqdn = fqdn.lower()
 
+    site = site.lower()
+
     if site not in SITES and 'base_url' in SITES[site]:
         return False
 
