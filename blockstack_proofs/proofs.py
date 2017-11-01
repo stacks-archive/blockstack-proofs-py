@@ -13,7 +13,7 @@ import hashlib
 
 from time import time
 
-from .htmlparsing import get_search_text, get_github_text, get_twitter_url
+from .htmlparsing import get_search_text, get_github_text, get_twitter_url, get_instagram_identity, get_linkedin_identity
 from .sites import SITES
 
 
@@ -64,21 +64,33 @@ def contains_valid_proof_statement(search_text, fqdn, address = None):
 
 def is_valid_proof(site, site_username, fqdn, proof_url, address = None):
     site_username = site_username.lower()
-    proof_url = proof_url.lower()
+#    proof_url = proof_url.lower()
     fqdn = fqdn.lower()
 
     site = site.lower()
 
     if site not in SITES and 'base_url' in SITES[site]:
+        print "Invalid site {}".format(site)
+
         return False
 
-    check_url = SITES[site]['base_url'] + site_username
+    check_url = SITES[site]['base_url']
+    if not SITES[site].get('base_url_enough', False):
+        check_url += site_username
 
-    if not proof_url.startswith(check_url):
+    if (not proof_url.startswith(check_url) and
+        not proof_url.lower().startswith(check_url)):
 
         if site == 'facebook':
 
             check_url = SITES['facebook-www']['base_url']
+
+            if not proof_url.startswith(check_url):
+                return False
+
+        elif site == 'instagram':
+
+            check_url = SITES['instagram-http']['base_url']
 
             if not proof_url.startswith(check_url):
                 return False
@@ -113,6 +125,16 @@ def is_valid_proof(site, site_username, fqdn, proof_url, address = None):
             search_text = ''
     else:
         search_text = ''
+
+    if site == 'instagram':
+        actual_id = get_instagram_identity(r.text)
+        if actual_id != site_username:
+            return False
+    if site == 'linkedin':
+        actual_id = get_linkedin_identity(r.text)
+        if actual_id != site_username:
+            print "Expected {}, got {}".format(site_username, actual_id)
+            return False
 
     return contains_valid_proof_statement(search_text, fqdn, address = address)
 
@@ -202,7 +224,7 @@ def profile_v3_to_proofs(profile, fqdn, refresh=False, address = None):
     for account in accounts:
 
         # skip if proof service is not supported
-        if 'service' in account and account['service'] not in SITES:
+        if 'service' in account and account['service'].lower() not in SITES:
             continue
 
         if 'proofType' in account and account['proofType'] == "http":

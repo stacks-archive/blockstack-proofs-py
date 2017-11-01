@@ -37,15 +37,24 @@ SITES = {
         'html_query': {
         }
     },
-    'instagram': {
-        'base_url': 'http://instagram.com/',
+    'instagram-http': {
+        'base_url': 'https://instagram.com/',
         'html_query': {
-        }
+        },
+        'base_url_enough': True,
+
+    },
+    'instagram': {
+        'base_url': 'https://www.instagram.com/',
+        'html_query': {
+        },
+        'base_url_enough': True,
     },
     'linkedin': {
-        'base_url': 'https://www.linkedin.com/in/',
+        'base_url': 'https://www.linkedin.com/feed/update/',
         'html_query': {
-        }
+        },
+        'base_url_enough': True
     },
     'stackoverflow': {
         'base_url': 'http://stackoverflow.com/users/',

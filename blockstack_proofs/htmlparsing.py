@@ -42,6 +42,30 @@ def get_github_text(raw_html):
 
     return search_text
 
+def get_instagram_identity(raw_html):
+    try:
+        html = BeautifulSoup(raw_html, 'html.parser')
+        username = html.find("meta", {"property": "og:description"})['content']
+        if username:
+            parts = username.split(':')
+            if len(parts) > 1:
+                lets_match = parts[0]
+                parens_open = lets_match.index("(")
+                parens_close = lets_match.index(")")
+                return lets_match[parens_open+2:parens_close]
+    except Exception as e:
+        import traceback as tb; tb.print_exc()
+        return None
+
+def get_linkedin_identity(raw_html):
+    try:
+        html = BeautifulSoup(raw_html, 'html.parser')
+        profileLink = html.find("article").find(class_='post-meta__profile-link')
+        if profileLink:
+            return profileLink.get('href').split('/')[-1]
+    except Exception as e:
+        import traceback as tb; tb.print_exc()
+        return None
 
 def get_search_text(service, raw_html):
 
